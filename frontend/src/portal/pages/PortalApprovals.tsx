@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Check, X, AlertCircle, RefreshCw } from 'lucide-react';
+import { Check, X, AlertCircle, RefreshCw, ShieldAlert, UserCheck } from 'lucide-react';
 import type { AutomationRequest } from '../types';
 import portalApi from '../portalApi';
 import { PortalStatusChip } from '../components/PortalStatusChip';
@@ -10,11 +10,23 @@ export const PortalApprovals: React.FC = () => {
   const [selectedRequest, setSelectedRequest] = useState<AutomationRequest | null>(null);
   const [comment, setComment] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
+  const [currentUser, setCurrentUser] = useState<string>(
+    localStorage.getItem('portal_user') || 'engineer_user'
+  );
 
   useEffect(() => {
     fetchRequests();
     const timer = setInterval(fetchRequests, 5000);
     return () => clearInterval(timer);
+  }, []);
+
+  // Listen for user role switches
+  useEffect(() => {
+    const handleStorage = () => {
+      setCurrentUser(localStorage.getItem('portal_user') || 'engineer_user');
+    };
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
   }, []);
 
   const fetchRequests = async () => {
@@ -24,6 +36,15 @@ export const PortalApprovals: React.FC = () => {
     } catch {
       // ignore
     }
+  };
+
+  const switchToApprover = () => {
+    localStorage.setItem('portal_user', 'approver_user');
+    setCurrentUser('approver_user');
+    setActionError('');
+    // Trigger storage event to update sidebar
+    window.dispatchEvent(new Event('storage'));
+    window.location.reload();
   };
 
   const handleApprove = async (reqId: string) => {
@@ -56,6 +77,7 @@ export const PortalApprovals: React.FC = () => {
     }
   };
 
+  const isApprover = currentUser === 'approver_user' || currentUser === 'admin_user';
   const pendingList = requests.filter((r) => r.status === 'PENDING_APPROVAL');
   const pastList = requests.filter((r) => r.status !== 'PENDING_APPROVAL');
 
@@ -77,10 +99,41 @@ export const PortalApprovals: React.FC = () => {
         </button>
       </div>
 
+      {/* Role Alert / Helper Banner if currently logged in as requester */}
+      {!isApprover && (
+        <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-between text-xs text-amber-900">
+          <div className="flex items-center gap-2.5">
+            <ShieldAlert size={18} className="text-amber-600 shrink-0" />
+            <div>
+              <span className="font-bold">You are currently in Requester role (<code>engineer_user</code>).</span>
+              <p className="text-[11px] text-amber-700 mt-0.5">
+                Only designated approvers can approve or reject. Switch your role to review pending requests.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={switchToApprover}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-semibold text-xs transition-colors shadow-sm"
+          >
+            <UserCheck size={13} /> Switch to Approver (<code>approver_user</code>)
+          </button>
+        </div>
+      )}
+
       {actionError && (
-        <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-2 text-xs text-rose-800">
-          <AlertCircle size={16} className="text-rose-600 shrink-0" />
-          <span>{actionError}</span>
+        <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl flex items-center justify-between text-xs text-rose-800">
+          <div className="flex items-center gap-2">
+            <AlertCircle size={16} className="text-rose-600 shrink-0" />
+            <span>{actionError}</span>
+          </div>
+          {!isApprover && (
+            <button
+              onClick={switchToApprover}
+              className="text-xs font-bold text-rose-700 underline hover:text-rose-900"
+            >
+              Switch to Approver Role &rarr;
+            </button>
+          )}
         </div>
       )}
 
