@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Inbox, BarChart3, Beaker } from 'lucide-react';
+import { Inbox, BarChart3, Beaker, Server } from 'lucide-react';
 
 const links = [
   { to: '/inbox', label: 'Inbox', icon: Inbox },
@@ -36,6 +36,17 @@ export default function Sidebar() {
             {label}
           </NavLink>
         ))}
+
+        {/* Portal Entry Point */}
+        <div className="pt-4 mt-4 border-t border-slate-700/60 px-1">
+          <NavLink
+            to="/portal/dashboard"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold bg-indigo-600/30 text-indigo-300 hover:bg-indigo-600 hover:text-white transition-all border border-indigo-500/30"
+          >
+            <Server size={18} />
+            Infra Portal &rarr;
+          </NavLink>
+        </div>
       </nav>
 
       {/* User Label */}

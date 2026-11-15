@@ -1,0 +1,434 @@
+{
+  "automations": [
+    {
+      "id": "hana-linux-start",
+      "name": "HANA Start",
+      "category": "SAP HANA",
+      "os": "Linux",
+      "action": "START",
+      "description": "Start SAP HANA database instances and associated tenant services on Linux hosts.",
+      "workflow_file": "hana_start.yml",
+      "git_ref": "main",
+      "enabled": true,
+      "requires_configuration": false,
+      "required_inputs": [
+        {
+          "name": "sid",
+          "label": "System ID (SID)",
+          "type": "string",
+          "placeholder": "e.g. HDB, PRD",
+          "regex": "^[A-Za-z0-9]{3}$",
+          "description": "3-character SAP HANA System Identifier"
+        },
+        {
+          "name": "instance_number",
+          "label": "Instance Number",
+          "type": "string",
+          "placeholder": "e.g. 00, 01",
+          "regex": "^[0-9]{2}$",
+          "description": "2-digit HANA instance number"
+        }
+      ],
+      "optional_inputs": [
+        {
+          "name": "target_host",
+          "label": "Target Host / Inventory Group",
+          "type": "string",
+          "placeholder": "e.g. hana-node01.corp",
+          "description": "Target server FQDN or inventory group (defaults to inventory mapping for SID)"
+        }
+      ],
+      "github_input_mapping": {
+        "sid": "sid",
+        "action": "action",
+        "instance_number": "instance_number",
+        "target_host": "target_host"
+      }
+    },
+    {
+      "id": "hana-linux-stop",
+      "name": "HANA Stop",
+      "category": "SAP HANA",
+      "os": "Linux",
+      "action": "STOP",
+      "description": "Gracefully stop SAP HANA database services on Linux hosts.",
+      "workflow_file": "hana_stop.yml",
+      "git_ref": "main",
+      "enabled": true,
+      "requires_configuration": false,
+      "required_inputs": [
+        {
+          "name": "sid",
+          "label": "System ID (SID)",
+          "type": "string",
+          "placeholder": "e.g. HDB, PRD",
+          "regex": "^[A-Za-z0-9]{3}$",
+          "description": "3-character SAP HANA System Identifier"
+        },
+        {
+          "name": "instance_number",
+          "label": "Instance Number",
+          "type": "string",
+          "placeholder": "e.g. 00, 01",
+          "regex": "^[0-9]{2}$",
+          "description": "2-digit HANA instance number"
+        }
+      ],
+      "optional_inputs": [
+        {
+          "name": "target_host",
+          "label": "Target Host / Inventory Group",
+          "type": "string",
+          "placeholder": "e.g. hana-node01.corp",
+          "description": "Target server FQDN"
+        }
+      ],
+      "github_input_mapping": {
+        "sid": "sid",
+        "action": "action",
+        "instance_number": "instance_number",
+        "target_host": "target_host"
+      }
+    },
+    {
+      "id": "sap-linux-start",
+      "name": "SAP Start",
+      "category": "SAP",
+      "os": "Linux",
+      "action": "START",
+      "description": "Start SAP Application Server instances (ASCS, PAS, AAS) on Linux hosts.",
+      "workflow_file": "sap_start_linux.yml",
+      "git_ref": "main",
+      "enabled": true,
+      "requires_configuration": false,
+      "required_inputs": [
+        {
+          "name": "sid",
+          "label": "System ID (SID)",
+          "type": "string",
+          "placeholder": "e.g. ERP, S4H",
+          "regex": "^[A-Za-z0-9]{3}$",
+          "description": "3-character SAP System Identifier"
+        },
+        {
+          "name": "instance_number",
+          "label": "Instance Number",
+          "type": "string",
+          "placeholder": "e.g. 00",
+          "regex": "^[0-9]{2}$",
+          "description": "Primary instance number"
+        }
+      ],
+      "optional_inputs": [
+        {
+          "name": "target_host",
+          "label": "Target Host",
+          "type": "string",
+          "placeholder": "e.g. sap-app01.corp",
+          "description": "Host name or inventory selector"
+        }
+      ],
+      "github_input_mapping": {
+        "sid": "sid",
+        "action": "action",
+        "instance_number": "instance_number",
+        "target_host": "target_host"
+      }
+    },
+    {
+      "id": "sap-linux-stop",
+      "name": "SAP Stop",
+      "category": "SAP",
+      "os": "Linux",
+      "action": "STOP",
+      "description": "Safely shut down SAP Application Server instances on Linux hosts.",
+      "workflow_file": "sap_stop_linux.yml",
+      "git_ref": "main",
+      "enabled": true,
+      "requires_configuration": false,
+      "required_inputs": [
+        {
+          "name": "sid",
+          "label": "System ID (SID)",
+          "type": "string",
+          "placeholder": "e.g. ERP, S4H",
+          "regex": "^[A-Za-z0-9]{3}$",
+          "description": "3-character SAP System Identifier"
+        },
+        {
+          "name": "instance_number",
+          "label": "Instance Number",
+          "type": "string",
+          "placeholder": "e.g. 00",
+          "regex": "^[0-9]{2}$",
+          "description": "Primary instance number"
+        }
+      ],
+      "optional_inputs": [
+        {
+          "name": "target_host",
+          "label": "Target Host",
+          "type": "string",
+          "placeholder": "e.g. sap-app01.corp",
+          "description": "Host name or inventory selector"
+        }
+      ],
+      "github_input_mapping": {
+        "sid": "sid",
+        "action": "action",
+        "instance_number": "instance_number",
+        "target_host": "target_host"
+      }
+    },
+    {
+      "id": "sap-windows-start",
+      "name": "SAP Start",
+      "category": "SAP",
+      "os": "Windows",
+      "action": "START",
+      "description": "Start SAP services and instances on Windows Server hosts via WinRM.",
+      "workflow_file": "sap_start_windows.yml",
+      "git_ref": "main",
+      "enabled": true,
+      "requires_configuration": false,
+      "required_inputs": [
+        {
+          "name": "sid",
+          "label": "System ID (SID)",
+          "type": "string",
+          "placeholder": "e.g. ERP, CRM",
+          "regex": "^[A-Za-z0-9]{3}$",
+          "description": "3-character SAP System Identifier"
+        },
+        {
+          "name": "instance_number",
+          "label": "Instance Number",
+          "type": "string",
+          "placeholder": "e.g. 00",
+          "regex": "^[0-9]{2}$",
+          "description": "Primary instance number"
+        }
+      ],
+      "optional_inputs": [
+        {
+          "name": "target_host",
+          "label": "Target Windows Host",
+          "type": "string",
+          "placeholder": "e.g. win-sap01.corp",
+          "description": "Target Windows host FQDN"
+        }
+      ],
+      "github_input_mapping": {
+        "sid": "sid",
+        "action": "action",
+        "instance_number": "instance_number",
+        "target_host": "target_host"
+      }
+    },
+    {
+      "id": "sap-windows-stop",
+      "name": "SAP Stop",
+      "category": "SAP",
+      "os": "Windows",
+      "action": "STOP",
+      "description": "Stop SAP services and instances on Windows Server hosts.",
+      "workflow_file": "sap_stop_windows.yml",
+      "git_ref": "main",
+      "enabled": true,
+      "requires_configuration": false,
+      "required_inputs": [
+        {
+          "name": "sid",
+          "label": "System ID (SID)",
+          "type": "string",
+          "placeholder": "e.g. ERP, CRM",
+          "regex": "^[A-Za-z0-9]{3}$",
+          "description": "3-character SAP System Identifier"
+        },
+        {
+          "name": "instance_number",
+          "label": "Instance Number",
+          "type": "string",
+          "placeholder": "e.g. 00",
+          "regex": "^[0-9]{2}$",
+          "description": "Primary instance number"
+        }
+      ],
+      "optional_inputs": [
+        {
+          "name": "target_host",
+          "label": "Target Windows Host",
+          "type": "string",
+          "placeholder": "e.g. win-sap01.corp",
+          "description": "Target Windows host FQDN"
+        }
+      ],
+      "github_input_mapping": {
+        "sid": "sid",
+        "action": "action",
+        "instance_number": "instance_number",
+        "target_host": "target_host"
+      }
+    },
+    {
+      "id": "oracle-linux-start",
+      "name": "Oracle Start",
+      "category": "Oracle",
+      "os": "Linux",
+      "action": "START",
+      "description": "Start Oracle Database listener and instance on Linux hosts.",
+      "workflow_file": "oracle_start_linux.yml",
+      "git_ref": "main",
+      "enabled": true,
+      "requires_configuration": false,
+      "required_inputs": [
+        {
+          "name": "sid",
+          "label": "Oracle SID",
+          "type": "string",
+          "placeholder": "e.g. ORCL, PROD",
+          "regex": "^[A-Za-z0-9_]{1,8}$",
+          "description": "Oracle System Identifier (1 to 8 alphanumeric characters)"
+        }
+      ],
+      "optional_inputs": [
+        {
+          "name": "oracle_home",
+          "label": "Oracle Home Path",
+          "type": "string",
+          "placeholder": "/u01/app/oracle/product/19.0.0/dbhome_1",
+          "description": "Path to ORACLE_HOME (defaults to system inventory if omitted)"
+        },
+        {
+          "name": "target_host",
+          "label": "Target Linux Host",
+          "type": "string",
+          "placeholder": "e.g. ora-db01.corp",
+          "description": "Target host FQDN"
+        }
+      ],
+      "github_input_mapping": {
+        "sid": "sid",
+        "action": "action",
+        "oracle_home": "oracle_home",
+        "target_host": "target_host"
+      }
+    },
+    {
+      "id": "oracle-linux-stop",
+      "name": "Oracle Stop",
+      "category": "Oracle",
+      "os": "Linux",
+      "action": "STOP",
+      "description": "Gracefully shut down Oracle instance (immediate) and listener on Linux hosts.",
+      "workflow_file": "oracle_stop_linux.yml",
+      "git_ref": "main",
+      "enabled": true,
+      "requires_configuration": false,
+      "required_inputs": [
+        {
+          "name": "sid",
+          "label": "Oracle SID",
+          "type": "string",
+          "placeholder": "e.g. ORCL, PROD",
+          "regex": "^[A-Za-z0-9_]{1,8}$",
+          "description": "Oracle System Identifier"
+        }
+      ],
+      "optional_inputs": [
+        {
+          "name": "oracle_home",
+          "label": "Oracle Home Path",
+          "type": "string",
+          "placeholder": "/u01/app/oracle/product/19.0.0/dbhome_1",
+          "description": "Path to ORACLE_HOME"
+        },
+        {
+          "name": "target_host",
+          "label": "Target Linux Host",
+          "type": "string",
+          "placeholder": "e.g. ora-db01.corp",
+          "description": "Target host FQDN"
+        }
+      ],
+      "github_input_mapping": {
+        "sid": "sid",
+        "action": "action",
+        "oracle_home": "oracle_home",
+        "target_host": "target_host"
+      }
+    },
+    {
+      "id": "oracle-windows-start",
+      "name": "Oracle Start",
+      "category": "Oracle",
+      "os": "Windows",
+      "action": "START",
+      "description": "Start Oracle Database services on Windows Server hosts.",
+      "workflow_file": "oracle_start_windows.yml",
+      "git_ref": "main",
+      "enabled": true,
+      "requires_configuration": false,
+      "required_inputs": [
+        {
+          "name": "sid",
+          "label": "Oracle SID",
+          "type": "string",
+          "placeholder": "e.g. ORCL",
+          "regex": "^[A-Za-z0-9_]{1,8}$",
+          "description": "Oracle System Identifier"
+        }
+      ],
+      "optional_inputs": [
+        {
+          "name": "target_host",
+          "label": "Target Windows Host",
+          "type": "string",
+          "placeholder": "e.g. win-ora01.corp",
+          "description": "Target Windows host FQDN"
+        }
+      ],
+      "github_input_mapping": {
+        "sid": "sid",
+        "action": "action",
+        "target_host": "target_host"
+      }
+    },
+    {
+      "id": "oracle-windows-stop",
+      "name": "Oracle Stop",
+      "category": "Oracle",
+      "os": "Windows",
+      "action": "STOP",
+      "description": "Stop Oracle Database Windows services and instance.",
+      "workflow_file": "oracle_stop_windows.yml",
+      "git_ref": "main",
+      "enabled": true,
+      "requires_configuration": false,
+      "required_inputs": [
+        {
+          "name": "sid",
+          "label": "Oracle SID",
+          "type": "string",
+          "placeholder": "e.g. ORCL",
+          "regex": "^[A-Za-z0-9_]{1,8}$",
+          "description": "Oracle System Identifier"
+        }
+      ],
+      "optional_inputs": [
+        {
+          "name": "target_host",
+          "label": "Target Windows Host",
+          "type": "string",
+          "placeholder": "e.g. win-ora01.corp",
+          "description": "Target Windows host FQDN"
+        }
+      ],
+      "github_input_mapping": {
+        "sid": "sid",
+        "action": "action",
+        "target_host": "target_host"
+      }
+    }
+  ]
+}
