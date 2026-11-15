@@ -1,0 +1,36 @@
+{
+  "automations": [
+    {
+      "name": "AWS Access Automation",
+      "conditions": {
+        "category": "AWS Access"
+      },
+      "target_engine": "github_actions",
+      "github": {
+        "workflow": "aws-access.yml",
+        "ref": "main"
+      }
+    },
+    {
+      "name": "VPN Access Automation",
+      "conditions": {
+        "category": "VPN Access"
+      },
+      "target_engine": "mock",
+      "mock": {
+        "target_identifier": "vpn_access_workflow",
+        "success_rate": 0.85
+      }
+    },
+    {
+      "name": "Server Provisioning",
+      "conditions": {
+        "category": "Server Provisioning"
+      },
+      "target_engine": "ansible",
+      "ansible": {
+        "playbook": "provision_server.yml"
+      }
+    }
+  ]
+}
