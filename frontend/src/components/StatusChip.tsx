@@ -1,20 +1,25 @@
+import React from 'react';
+
 interface Props {
   status: string;
 }
 
-const colors: Record<string, string> = {
-  PENDING: 'bg-amber-100 text-amber-800',
-  LOCKED: 'bg-blue-100 text-blue-800',
-  RUNNING: 'bg-indigo-100 text-indigo-800 animate-pulse',
-  COMPLETED: 'bg-green-100 text-green-800',
-  DENIED: 'bg-red-100 text-red-800',
-  FAILED: 'bg-rose-100 text-rose-700',
-};
+export const StatusChip: React.FC<Props> = ({ status }) => {
+  const styles: Record<string, string> = {
+    PENDING_APPROVAL: 'bg-amber-950/80 text-amber-300 border-amber-700/60',
+    APPROVED: 'bg-emerald-950/80 text-emerald-300 border-emerald-700/60',
+    REJECTED: 'bg-rose-950/80 text-rose-300 border-rose-700/60',
+    QUEUED: 'bg-blue-950/80 text-blue-300 border-blue-700/60',
+    RUNNING: 'bg-indigo-950/80 text-indigo-300 border-indigo-700/60 animate-pulse',
+    COMPLETED: 'bg-emerald-950/80 text-emerald-300 border-emerald-700/60',
+    FAILED: 'bg-rose-950/80 text-rose-300 border-rose-700/60',
+  };
 
-export default function StatusChip({ status }: Props) {
+  const currentStyle = styles[status] || 'bg-slate-800 text-slate-300 border-slate-700';
+
   return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${colors[status] || 'bg-gray-100 text-gray-800'}`}>
-      {status}
+    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${currentStyle}`}>
+      {status.replace('_', ' ')}
     </span>
   );
-}
+};

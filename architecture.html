@@ -3,27 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ITSM Automation Platform - System Architecture</title>
+  <title>Infrastructure Automation Portal - Simple Standalone Architecture</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0b0f19;
+      --bg: #090d16;
       --card-bg: #111827;
-      --card-border: #1f2937;
+      --card-border: #1f293d;
       --card-hover: #1e293b;
-      --primary: #6366f1;
+      --primary: #4f46e5;
       --primary-light: #818cf8;
       --emerald: #10b981;
       --emerald-light: #34d399;
       --amber: #f59e0b;
       --amber-light: #fbbf24;
-      --rose: #f43f5e;
-      --cyan: #06b6d4;
-      --purple: #a855f7;
+      --rose: #ef4444;
+      --rose-light: #f87171;
+      --blue: #3b82f6;
+      --blue-light: #60a5fa;
       --text: #f3f4f6;
-      --text-muted: #9ca3af;
+      --text-muted: #94a3b8;
       --code-bg: #030712;
     }
 
@@ -37,7 +38,7 @@
       background-color: var(--bg);
       color: var(--text);
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      line-height: 1.5;
+      line-height: 1.6;
       padding: 2.5rem 1.5rem;
     }
 
@@ -51,20 +52,42 @@
       margin-bottom: 3.5rem;
     }
 
+    .badges-row {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+
     .badge {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      background: rgba(99, 102, 241, 0.1);
-      border: 1px solid rgba(99, 102, 241, 0.3);
-      color: var(--primary-light);
       padding: 0.35rem 0.9rem;
       border-radius: 9999px;
       font-size: 0.8rem;
       font-weight: 600;
       letter-spacing: 0.05em;
       text-transform: uppercase;
-      margin-bottom: 1rem;
+    }
+
+    .badge-emerald {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: var(--emerald-light);
+    }
+
+    .badge-indigo {
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      color: var(--primary-light);
+    }
+
+    .badge-amber {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: var(--amber-light);
     }
 
     .pulse-dot {
@@ -79,7 +102,7 @@
       font-size: 2.75rem;
       font-weight: 800;
       letter-spacing: -0.025em;
-      background: linear-gradient(135deg, #ffffff 30%, #9ca3af 100%);
+      background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       margin-bottom: 0.75rem;
@@ -88,239 +111,343 @@
     .subtitle {
       color: var(--text-muted);
       font-size: 1.15rem;
-      max-width: 700px;
+      max-width: 820px;
       margin: 0 auto;
     }
 
-    /* Diagram Canvas */
-    .architecture-diagram {
-      display: flex;
-      flex-direction: column;
-      gap: 1.75rem;
-      margin-bottom: 3.5rem;
-      position: relative;
-    }
-
-    .layer-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
+    .banner {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.95) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.4);
       border-radius: 1rem;
       padding: 1.75rem;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-      position: relative;
-      transition: all 0.25s ease;
+      margin-bottom: 3rem;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
     }
 
-    .layer-card:hover {
-      border-color: #374151;
-      transform: translateY(-2px);
-    }
-
-    .layer-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.25rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      padding-bottom: 0.75rem;
-    }
-
-    .layer-title {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-size: 1.15rem;
+    .banner-title {
+      font-size: 1.25rem;
       font-weight: 700;
-    }
-
-    .layer-tag {
-      font-size: 0.75rem;
-      padding: 0.2rem 0.6rem;
-      border-radius: 0.375rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 500;
-    }
-
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.25rem;
-    }
-
-    .grid-4 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.25rem;
-    }
-
-    .component-box {
-      background: var(--code-bg);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 0.75rem;
-      padding: 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      position: relative;
-    }
-
-    .component-box::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 1.25rem;
-      right: 1.25rem;
-      height: 2px;
-      border-radius: 2px;
-    }
-
-    .component-box.primary::before { background: var(--primary); }
-    .component-box.emerald::before { background: var(--emerald); }
-    .component-box.amber::before { background: var(--amber); }
-    .component-box.cyan::before { background: var(--cyan); }
-    .component-box.purple::before { background: var(--purple); }
-    .component-box.rose::before { background: var(--rose); }
-
-    .comp-title {
-      font-size: 0.95rem;
-      font-weight: 600;
       color: #fff;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-    }
-
-    .comp-desc {
-      font-size: 0.825rem;
-      color: var(--text-muted);
-      line-height: 1.4;
-    }
-
-    .comp-port {
-      display: inline-block;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      color: var(--primary-light);
-      background: rgba(99, 102, 241, 0.1);
-      padding: 0.15rem 0.4rem;
-      border-radius: 0.25rem;
-      align-self: flex-start;
-      margin-top: auto;
-    }
-
-    /* Arrows / Flow Connector */
-    .flow-divider {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      font-family: 'JetBrains Mono', monospace;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin: -0.25rem 0;
-    }
-
-    .flow-line {
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.3), transparent);
-    }
-
-    .flow-indicator {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: #1e293b;
-      padding: 0.25rem 0.75rem;
-      border-radius: 9999px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    /* State Machine Card */
-    .state-machine {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
       gap: 0.75rem;
-      padding: 1.25rem;
-      background: var(--code-bg);
-      border-radius: 0.75rem;
-      border: 1px dashed rgba(255, 255, 255, 0.1);
-    }
-
-    .state-pill {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8rem;
-      font-weight: 600;
-      padding: 0.4rem 0.8rem;
-      border-radius: 9999px;
-    }
-
-    .st-pending { background: rgba(245, 158, 11, 0.15); color: var(--amber-light); border: 1px solid rgba(245, 158, 11, 0.3); }
-    .st-locked { background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3); }
-    .st-running { background: rgba(99, 102, 241, 0.15); color: var(--primary-light); border: 1px solid rgba(99, 102, 241, 0.3); }
-    .st-completed { background: rgba(16, 185, 129, 0.15); color: var(--emerald-light); border: 1px solid rgba(16, 185, 129, 0.3); }
-    .st-denied { background: rgba(244, 63, 94, 0.15); color: #fda4af; border: 1px solid rgba(244, 63, 94, 0.3); }
-    .st-failed { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); }
-
-    .arrow {
-      color: var(--text-muted);
-      font-weight: bold;
-    }
-
-    /* Quick Specs Grid */
-    .specs-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
-    }
-
-    .spec-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 0.75rem;
-      padding: 1.25rem;
-    }
-
-    .spec-card h3 {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
       margin-bottom: 0.75rem;
     }
 
-    .spec-list {
-      list-style: none;
-      font-size: 0.875rem;
+    .banner p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: #fff;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 0.75rem;
+    }
+
+    .section-title span.number {
+      background: rgba(99, 102, 241, 0.2);
+      color: var(--primary-light);
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      width: 2rem;
+      height: 2rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    /* 4-Tier Pipeline */
+    .flow-container {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .flow-tiers {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 992px) {
+      .flow-tiers {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .tier-box {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--card-border);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      transition: transform 0.2s, border-color 0.2s;
     }
 
-    .spec-list li {
-      display: flex;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-      padding-bottom: 0.3rem;
+    .tier-box:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary-light);
     }
 
-    .spec-list span:first-child {
-      color: var(--text-muted);
+    .tier-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+      color: var(--primary-light);
     }
 
-    .spec-list span:last-child {
-      font-family: 'JetBrains Mono', monospace;
+    .tier-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
       color: #fff;
+    }
+
+    .tier-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      flex-grow: 1;
+    }
+
+    .tier-tech {
+      background: var(--code-bg);
+      border-radius: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--emerald-light);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Comparison Box */
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    @media (max-width: 768px) {
+      .comparison-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .comp-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+    }
+
+    .comp-card.removed {
+      border-color: rgba(239, 68, 68, 0.3);
+      background: linear-gradient(180deg, rgba(239, 68, 68, 0.05) 0%, var(--card-bg) 100%);
+    }
+
+    .comp-card.retained {
+      border-color: rgba(16, 185, 129, 0.4);
+      background: linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, var(--card-bg) 100%);
+    }
+
+    .comp-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .comp-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+    }
+
+    .comp-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+
+    /* State Machine */
+    .state-machine {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .state-steps {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+
+    .state-node {
+      background: #0f172a;
+      border: 1px solid var(--card-border);
+      padding: 0.85rem 1.2rem;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-align: center;
+      min-width: 140px;
+    }
+
+    .state-node.pending {
+      border-color: var(--amber);
+      color: var(--amber-light);
+      background: rgba(245, 158, 11, 0.1);
+    }
+
+    .state-node.approved {
+      border-color: var(--emerald);
+      color: var(--emerald-light);
+      background: rgba(16, 185, 129, 0.1);
+    }
+
+    .state-node.running {
+      border-color: var(--blue);
+      color: var(--blue-light);
+      background: rgba(59, 130, 246, 0.1);
+    }
+
+    .state-node.done {
+      border-color: var(--emerald);
+      color: var(--emerald-light);
+      background: rgba(16, 185, 129, 0.15);
+    }
+
+    .state-arrow {
+      color: var(--text-muted);
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+
+    /* Table */
+    .table-container {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 1rem;
+      overflow-x: auto;
+      margin-bottom: 3rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: #0f172a;
+      padding: 1rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--card-border);
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .tag-start {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--emerald-light);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .tag-stop {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--rose-light);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .endpoints-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 3rem;
+    }
+
+    @media (max-width: 768px) {
+      .endpoints-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .ep-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+    }
+
+    .ep-card h4 {
+      font-size: 0.95rem;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .ep-link {
+      color: var(--primary-light);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    .ep-link:hover {
+      text-decoration: underline;
     }
 
     footer {
       text-align: center;
-      margin-top: 4rem;
       padding-top: 2rem;
       border-top: 1px solid var(--card-border);
       color: var(--text-muted);
@@ -331,254 +458,274 @@
 <body>
 
   <div class="container">
+
+    <!-- Header -->
     <header>
-      <div class="badge">
-        <span class="pulse-dot"></span>
-        Production Ready Local MVP
+      <div class="badges-row">
+        <span class="badge badge-emerald">
+          <span class="pulse-dot"></span> Active Branch: standalone-lightweight-portal
+        </span>
+        <span class="badge badge-indigo">Clean Standalone Code</span>
+        <span class="badge badge-amber">Single-Approver Gate</span>
       </div>
-      <h1>ITSM Automation Platform</h1>
-      <p class="subtitle">Modular monolith architecture with asynchronous message ingestion, deterministic condition mapping, row-level concurrency locking, and pluggable execution engines.</p>
+      <h1>Infrastructure Automation Portal</h1>
+      <p class="subtitle">
+        Simple, independent, lightweight infrastructure portal. Contains strictly the simplified self-service code with all ITSM dependencies removed.
+      </p>
     </header>
 
-    <div class="architecture-diagram">
-
-      <!-- LAYER 1: CLIENT & PRESENTATION -->
-      <div class="layer-card">
-        <div class="layer-header">
-          <div class="layer-title">
-            <span>💻</span>
-            <span>Presentation Layer</span>
-          </div>
-          <span class="layer-tag" style="background: rgba(99, 102, 241, 0.2); color: var(--primary-light);">React 18 + Vite + TS</span>
-        </div>
-        <div class="grid-3">
-          <div class="component-box primary">
-            <div class="comp-title">
-              <span>Approval Workbench</span>
-              <span>📥</span>
-            </div>
-            <p class="comp-desc">5-second polling table, multi-state status filters, real-time lock indicators, and modal reviews.</p>
-            <span class="comp-port">/inbox</span>
-          </div>
-          <div class="component-box emerald">
-            <div class="comp-title">
-              <span>Analytics & Metrics</span>
-              <span>📊</span>
-            </div>
-            <p class="comp-desc">Recharts 30-day volume trend, category distribution donut, 6 overview metric cards, and CSV export streaming.</p>
-            <span class="comp-port">/analytics</span>
-          </div>
-          <div class="component-box amber">
-            <div class="comp-title">
-              <span>Mock ITSM Simulator</span>
-              <span>🧪</span>
-            </div>
-            <p class="comp-desc">Realistic payload generation scaffold (SR, CR, INC) and direct submission to RabbitMQ pipeline.</p>
-            <span class="comp-port">/mock</span>
-          </div>
-        </div>
+    <!-- Overview Banner -->
+    <div class="banner">
+      <div class="banner-title">
+        <span>⚡</span> Pure Standalone Version (Zero ITSM Overhead)
       </div>
-
-      <!-- CONNECTOR 1 -->
-      <div class="flow-divider">
-        <div class="flow-line"></div>
-        <div class="flow-indicator">REST API + Bearer / X-Dev-User Headers (Port 8000) ↓</div>
-        <div class="flow-line"></div>
-      </div>
-
-      <!-- LAYER 2: BACKEND & API GATEWAY -->
-      <div class="layer-card">
-        <div class="layer-header">
-          <div class="layer-title">
-            <span>⚡</span>
-            <span>Backend Core & Ingestion API</span>
-          </div>
-          <span class="layer-tag" style="background: rgba(6, 182, 212, 0.2); color: var(--cyan);">FastAPI (Python 3.13)</span>
-        </div>
-        <div class="grid-4">
-          <div class="component-box cyan">
-            <div class="comp-title">
-              <span>REST Endpoints</span>
-              <span>🌐</span>
-            </div>
-            <p class="comp-desc">Auth (JWT), Webhook ingestion, Health & Readiness, and Tickets CRUD operations.</p>
-            <span class="comp-port">app/api/*</span>
-          </div>
-          <div class="component-box purple">
-            <div class="comp-title">
-              <span>Row-Level Lock Service</span>
-              <span>🔒</span>
-            </div>
-            <p class="comp-desc">Atomic <code>SELECT ... FOR UPDATE NOWAIT</code> concurrency lock preventing multi-operator collisions (409 Conflict).</p>
-            <span class="comp-port">app/services/approval.py</span>
-          </div>
-          <div class="component-box emerald">
-            <div class="comp-title">
-              <span>Rule Mapping Engine</span>
-              <span>🎯</span>
-            </div>
-            <p class="comp-desc">Evaluates ticket categories against external <code>automations.json</code> rules without code changes.</p>
-            <span class="comp-port">app/services/mapping.py</span>
-          </div>
-          <div class="component-box rose">
-            <div class="comp-title">
-              <span>Audit Trail Logger</span>
-              <span>📜</span>
-            </div>
-            <p class="comp-desc">Immutable history logging state transitions, actions, user references, and execution payloads.</p>
-            <span class="comp-port">app/services/audit.py</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- CONNECTOR 2 -->
-      <div class="flow-divider">
-        <div class="flow-line"></div>
-        <div class="flow-indicator">Async Message Broker & State Machine Dispatch ↓</div>
-        <div class="flow-line"></div>
-      </div>
-
-      <!-- LAYER 3: ASYNC BROKER & WORKERS -->
-      <div class="layer-card">
-        <div class="layer-header">
-          <div class="layer-title">
-            <span>📬</span>
-            <span>Asynchronous Ingestion & Worker Pipeline</span>
-          </div>
-          <span class="layer-tag" style="background: rgba(245, 158, 11, 0.2); color: var(--amber-light);">RabbitMQ + aio-pika</span>
-        </div>
-        <div class="grid-3">
-          <div class="component-box amber">
-            <div class="comp-title">
-              <span>RabbitMQ Ingestion Queue</span>
-              <span>📨</span>
-            </div>
-            <p class="comp-desc">Durable exchange & queue (<code>itsm_incoming</code>) backed by dead-letter exchange (<code>itsm_dlx</code>).</p>
-            <span class="comp-port">amqp://localhost:5672</span>
-          </div>
-          <div class="component-box primary">
-            <div class="comp-title">
-              <span>Consumer Background Process</span>
-              <span>⚙️</span>
-            </div>
-            <p class="comp-desc">Prefetch count 10 consumer. Deduplicates <code>ticket_no</code>, maps automation rules, and persists PENDING tickets.</p>
-            <span class="comp-port">app/workers/consumer.py</span>
-          </div>
-          <div class="component-box emerald">
-            <div class="comp-title">
-              <span>PostgreSQL 16 Database</span>
-              <span>🗄️</span>
-            </div>
-            <p class="comp-desc">Async SQLAlchemy with NullPool. Relational tables: <code>users</code>, <code>tickets</code>, <code>execution_logs</code>, <code>audit_logs</code>, <code>automation_maps</code>.</p>
-            <span class="comp-port">localhost:5432/itsm_platform</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- CONNECTOR 3 -->
-      <div class="flow-divider">
-        <div class="flow-line"></div>
-        <div class="flow-indicator">Approved Ticket Execution Dispatch ↓</div>
-        <div class="flow-line"></div>
-      </div>
-
-      <!-- LAYER 4: PLUGGABLE EXECUTION ENGINES -->
-      <div class="layer-card">
-        <div class="layer-header">
-          <div class="layer-title">
-            <span>🚀</span>
-            <span>Execution Adapters</span>
-          </div>
-          <span class="layer-tag" style="background: rgba(16, 185, 129, 0.2); color: var(--emerald-light);">Pluggable Engines</span>
-        </div>
-        <div class="grid-3">
-          <div class="component-box emerald">
-            <div class="comp-title">
-              <span>Mock Executor</span>
-              <span>🎲</span>
-            </div>
-            <p class="comp-desc">Configurable 1-3s delay with 85% success simulation. Generates realistic execution logs and external job IDs.</p>
-            <span class="comp-port">Target: VPN Access / Demo</span>
-          </div>
-          <div class="component-box primary">
-            <div class="comp-title">
-              <span>GitHub Actions Adapter</span>
-              <span>🐙</span>
-            </div>
-            <p class="comp-desc">HTTP workflow dispatch via GitHub API (<code>repository_dispatch</code>) with graceful fallback when unconfigured.</p>
-            <span class="comp-port">Target: aws-access.yml</span>
-          </div>
-          <div class="component-box rose">
-            <div class="comp-title">
-              <span>Ansible Playbook Engine</span>
-              <span>📜</span>
-            </div>
-            <p class="comp-desc">Subprocess shell execution running <code>ansible-playbook -e</code> with parameter passing and exit-code validation.</p>
-            <span class="comp-port">Target: provision_server.yml</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- STATE MACHINE DISPLAY -->
-      <div class="layer-card">
-        <div class="layer-header">
-          <div class="layer-title">
-            <span>🔄</span>
-            <span>Deterministic Ticket State Lifecycle</span>
-          </div>
-          <span class="layer-tag" style="background: rgba(168, 85, 247, 0.2); color: var(--purple);">State Machine</span>
-        </div>
-        <div class="state-machine">
-          <span class="state-pill st-pending">PENDING</span>
-          <span class="arrow">⇄</span>
-          <span class="state-pill st-locked">LOCKED</span>
-          <span class="arrow">→</span>
-          <span class="state-pill st-running">APPROVED / RUNNING</span>
-          <span class="arrow">→</span>
-          <span class="state-pill st-completed">COMPLETED</span>
-          <span class="arrow">/</span>
-          <span class="state-pill st-failed">FAILED (Retryable)</span>
-          <span class="arrow">|</span>
-          <span class="state-pill st-denied">DENIED</span>
-        </div>
-      </div>
-
+      <p>
+        This branch represents a clean, independent deployment of the Infrastructure Automation Portal. 
+        All legacy ITSM platform modules (RabbitMQ message queues, PostgreSQL clusters, dead-letter exchanges, BMC Helix/ServiceNow webhooks, and complex incident/change ticket lifecycles) have been completely removed.
+        The codebase consists strictly of:
+        <strong>Frontend (React + Vite) → Backend (FastAPI) → SQLite (portal.db) → GitHub Actions (HTTPX)</strong>.
+      </p>
     </div>
 
-    <!-- QUICK SPECIFICATION DETAILS -->
-    <div class="specs-grid">
-      <div class="spec-card">
-        <h3>Runtime & Environment</h3>
-        <ul class="spec-list">
-          <li><span>Operating System</span><span>macOS Native (No Docker)</span></li>
-          <li><span>Python Runtime</span><span>Python 3.13 (.venv)</span></li>
-          <li><span>Node & Frontend</span><span>Node 25 + React 18</span></li>
-          <li><span>Test Framework</span><span>Pytest + AnyIO (15/15 Passed)</span></li>
+    <!-- Section 1: 4-Tier Pipeline -->
+    <h2 class="section-title">
+      <span class="number">1</span> 4-Tier Standalone Architecture
+    </h2>
+    <div class="flow-container">
+      <div class="flow-tiers">
+        <div class="tier-box">
+          <div class="tier-badge">Tier 1: Frontend</div>
+          <div class="tier-title">React 18 + Vite</div>
+          <div class="tier-desc">
+            Single clean SPA with Dashboard, Catalogue, Approvals Workbench, and Executions History. Includes instant role switcher for testing.
+          </div>
+          <div class="tier-tech">Port 5173 • frontend/</div>
+        </div>
+
+        <div class="tier-box">
+          <div class="tier-badge">Tier 2: API Gateway</div>
+          <div class="tier-title">FastAPI Backend</div>
+          <div class="tier-desc">
+            Pure Python REST API. Enforces predefined catalogue schemas, verifies single designated approver permissions, and triggers workflow dispatches.
+          </div>
+          <div class="tier-tech">Port 8000 • backend/</div>
+        </div>
+
+        <div class="tier-box">
+          <div class="tier-badge">Tier 3: Persistence</div>
+          <div class="tier-title">SQLite Database</div>
+          <div class="tier-desc">
+            Embedded single-file database (<code style="color:var(--emerald-light);">portal.db</code>) with zero external setup, storing requests, executions, and audit records.
+          </div>
+          <div class="tier-tech">backend/portal.db</div>
+        </div>
+
+        <div class="tier-box">
+          <div class="tier-badge">Tier 4: Execution Engine</div>
+          <div class="tier-title">GitHub Actions</div>
+          <div class="tier-desc">
+            Directly triggers existing GitHub Actions workflows via HTTPX <code>workflow_dispatch</code> API to run your existing Ansible playbooks in CI/CD.
+          </div>
+          <div class="tier-tech">api.github.com / Simulated</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2: Codebase Comparison -->
+    <h2 class="section-title">
+      <span class="number">2</span> What Was Removed vs. Retained in This Branch
+    </h2>
+    <div class="comparison-grid">
+      <div class="comp-card removed">
+        <div class="comp-title" style="color: var(--rose-light);">❌ Completely Removed (No ITSM Overhead)</div>
+        <ul class="comp-list">
+          <li><span class="icon">🗑️</span> <strong>No RabbitMQ:</strong> No message brokers, queues, exchanges, or dead-letter queues.</li>
+          <li><span class="icon">🗑️</span> <strong>No PostgreSQL:</strong> No external database servers or connection pooling.</li>
+          <li><span class="icon">🗑️</span> <strong>No ITSM Tickets:</strong> No Incident, Service Request, or Change Request lifecycles.</li>
+          <li><span class="icon">🗑️</span> <strong>No ServiceNow/Helix:</strong> No enterprise ticket synchronization or webhook mocks.</li>
+          <li><span class="icon">🗑️</span> <strong>No Local Host Ansible:</strong> No direct shell playbook runs on the local server.</li>
         </ul>
       </div>
-      <div class="spec-card">
-        <h3>Local Service Ports</h3>
-        <ul class="spec-list">
-          <li><span>Frontend Dashboard</span><span>http://localhost:5173</span></li>
-          <li><span>FastAPI Backend API</span><span>http://localhost:8000</span></li>
-          <li><span>RabbitMQ Broker</span><span>localhost:5672</span></li>
-          <li><span>PostgreSQL DB</span><span>localhost:5432</span></li>
-        </ul>
-      </div>
-      <div class="spec-card">
-        <h3>Default Credentials</h3>
-        <ul class="spec-list">
-          <li><span>Administrator</span><span>admin_user / admin123</span></li>
-          <li><span>Approver User</span><span>approver_user / approver123</span></li>
-          <li><span>Service Account</span><span>svc_itsm / svc123</span></li>
-          <li><span>Dev Header Override</span><span>X-Dev-User: &lt;username&gt;</span></li>
+
+      <div class="comp-card retained">
+        <div class="comp-title" style="color: var(--emerald-light);">✅ Retained & Streamlined (Simple & Direct)</div>
+        <ul class="comp-list">
+          <li><span class="icon">✨</span> <strong>Direct 4-Step User Journey:</strong> Select → Input SID → Approve → Dispatch.</li>
+          <li><span class="icon">✨</span> <strong>Embedded SQLite:</strong> Single file persistence (<code style="color:var(--emerald-light);">portal.db</code>) with automatic schema initialization.</li>
+          <li><span class="icon">✨</span> <strong>Single Designated Approver Gate:</strong> Protects against accidental production restart or stop operations.</li>
+          <li><span class="icon">✨</span> <strong>Configuration-Driven:</strong> 10 predefined SAP & Oracle automations in <code style="color:var(--emerald-light);">automations.json</code>.</li>
+          <li><span class="icon">✨</span> <strong>Direct CI/CD Integration:</strong> Triggers existing GitHub workflows via clean HTTPX client.</li>
         </ul>
       </div>
     </div>
 
+    <!-- Section 3: State Machine -->
+    <h2 class="section-title">
+      <span class="number">3</span> Deterministic Request & Execution State Machine
+    </h2>
+    <div class="state-machine">
+      <div class="state-steps">
+        <div class="state-node">
+          1. SUBMITTED<br><small style="color: var(--text-muted);">Requester enters SID</small>
+        </div>
+        <div class="state-arrow">→</div>
+        <div class="state-node pending">
+          PENDING_APPROVAL<br><small>Awaiting Approver</small>
+        </div>
+        <div class="state-arrow">→</div>
+        <div class="state-node approved">
+          APPROVED<br><small>Dispatches to GitHub</small>
+        </div>
+        <div class="state-arrow">→</div>
+        <div class="state-node running">
+          RUNNING<br><small>GitHub Actions CI</small>
+        </div>
+        <div class="state-arrow">→</div>
+        <div class="state-node done">
+          COMPLETED<br><small>Execution Succeeded</small>
+        </div>
+      </div>
+      <div style="margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-muted); text-align: center;">
+        * Note: Approvers can mark requests as <span style="color: var(--rose-light); font-weight: 600;">REJECTED</span>. GitHub execution errors transition state to <span style="color: var(--rose-light); font-weight: 600;">FAILED</span>.
+      </div>
+    </div>
+
+    <!-- Section 4: Predefined Catalogue -->
+    <h2 class="section-title">
+      <span class="number">4</span> Predefined Infrastructure Catalogue (10 Automations)
+    </h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Automation ID</th>
+            <th>Platform</th>
+            <th>Target OS</th>
+            <th>Predefined Action</th>
+            <th>Required Parameter</th>
+            <th>Target GitHub Workflow</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>hana_start_linux</code></td>
+            <td>SAP HANA</td>
+            <td>Linux</td>
+            <td><span class="tag tag-start">START</span></td>
+            <td><code>sid</code>, <code>instance_number</code></td>
+            <td><code>hana-start-linux.yml</code></td>
+          </tr>
+          <tr>
+            <td><code>hana_stop_linux</code></td>
+            <td>SAP HANA</td>
+            <td>Linux</td>
+            <td><span class="tag tag-stop">STOP</span></td>
+            <td><code>sid</code>, <code>instance_number</code></td>
+            <td><code>hana-stop-linux.yml</code></td>
+          </tr>
+          <tr>
+            <td><code>sap_start_linux</code></td>
+            <td>SAP NetWeaver</td>
+            <td>Linux</td>
+            <td><span class="tag tag-start">START</span></td>
+            <td><code>sid</code></td>
+            <td><code>sap-start-linux.yml</code></td>
+          </tr>
+          <tr>
+            <td><code>sap_stop_linux</code></td>
+            <td>SAP NetWeaver</td>
+            <td>Linux</td>
+            <td><span class="tag tag-stop">STOP</span></td>
+            <td><code>sid</code></td>
+            <td><code>sap-stop-linux.yml</code></td>
+          </tr>
+          <tr>
+            <td><code>sap_start_windows</code></td>
+            <td>SAP NetWeaver</td>
+            <td>Windows</td>
+            <td><span class="tag tag-start">START</span></td>
+            <td><code>sid</code></td>
+            <td><code>sap-start-windows.yml</code></td>
+          </tr>
+          <tr>
+            <td><code>sap_stop_windows</code></td>
+            <td>SAP NetWeaver</td>
+            <td>Windows</td>
+            <td><span class="tag tag-stop">STOP</span></td>
+            <td><code>sid</code></td>
+            <td><code>sap-stop-windows.yml</code></td>
+          </tr>
+          <tr>
+            <td><code>oracle_start_linux</code></td>
+            <td>Oracle Database</td>
+            <td>Linux</td>
+            <td><span class="tag tag-start">START</span></td>
+            <td><code>sid</code></td>
+            <td><code>oracle-start-linux.yml</code></td>
+          </tr>
+          <tr>
+            <td><code>oracle_stop_linux</code></td>
+            <td>Oracle Database</td>
+            <td>Linux</td>
+            <td><span class="tag tag-stop">STOP</span></td>
+            <td><code>sid</code></td>
+            <td><code>oracle-stop-linux.yml</code></td>
+          </tr>
+          <tr>
+            <td><code>oracle_start_windows</code></td>
+            <td>Oracle Database</td>
+            <td>Windows</td>
+            <td><span class="tag tag-start">START</span></td>
+            <td><code>sid</code></td>
+            <td><code>oracle-start-windows.yml</code></td>
+          </tr>
+          <tr>
+            <td><code>oracle_stop_windows</code></td>
+            <td>Oracle Database</td>
+            <td>Windows</td>
+            <td><span class="tag tag-stop">STOP</span></td>
+            <td><code>sid</code></td>
+            <td><code>oracle-stop-windows.yml</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Section 5: Active Services & Endpoints -->
+    <h2 class="section-title">
+      <span class="number">5</span> Active Services & Ports
+    </h2>
+    <div class="endpoints-grid">
+      <div class="ep-card">
+        <h4>🖥️ Frontend Dashboard</h4>
+        <a class="ep-link" href="http://localhost:5173/dashboard" target="_blank">http://localhost:5173/dashboard</a>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">
+          Clean React 18 interface with Dashboard, Catalogue, Approvals Workbench, and Executions History.
+        </p>
+      </div>
+
+      <div class="ep-card">
+        <h4>⚡ FastAPI OpenAPI Docs</h4>
+        <a class="ep-link" href="http://localhost:8000/docs" target="_blank">http://localhost:8000/docs</a>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">
+          Interactive Swagger documentation for all portal endpoints (<code>/api/v1/*</code>).
+        </p>
+      </div>
+
+      <div class="ep-card">
+        <h4>❤️ Health Endpoint</h4>
+        <a class="ep-link" href="http://localhost:8000/health" target="_blank">http://localhost:8000/health</a>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">
+          Lightweight healthcheck validating SQLite database connection and dispatcher readiness.
+        </p>
+      </div>
+    </div>
+
+    <!-- Footer -->
     <footer>
-      <p>ITSM Automation Platform Architecture &bull; Built clean & deterministic &bull; Workspace: <code>/Users/mansibagora/Documents/Automation_Platform</code></p>
+      <p>Branch: <strong>standalone-lightweight-portal</strong> • Zero ITSM legacy dependencies.</p>
     </footer>
+
   </div>
 
 </body>

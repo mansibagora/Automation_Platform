@@ -1,11 +1,12 @@
 import axios from 'axios';
 
-const api = axios.create({ baseURL: '' });
+const api = axios.create({
+  baseURL: '',
+});
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  config.headers['X-Dev-User'] = localStorage.getItem('devUser') || 'admin_user';
+  const user = localStorage.getItem('portal_user') || 'engineer_user';
+  config.headers['X-Portal-User'] = user;
   return config;
 });
 
