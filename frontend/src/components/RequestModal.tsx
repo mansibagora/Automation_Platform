@@ -17,6 +17,9 @@ export const RequestModal: React.FC<Props> = ({ automation, onClose, onSuccess }
 
   if (!automation) return null;
 
+  const requiredInputs = automation.required_inputs || automation.inputs?.required || [];
+  const optionalInputs = automation.optional_inputs || automation.inputs?.optional || [];
+
   const handleParamChange = (name: string, val: any) => {
     setParams((prev) => ({ ...prev, [name]: val }));
   };
@@ -115,7 +118,7 @@ export const RequestModal: React.FC<Props> = ({ automation, onClose, onSuccess }
           </div>
 
           {/* Additional Dynamic Parameters */}
-          {automation.inputs.required.filter((i) => i.name !== 'sid').map((param) => (
+          {requiredInputs.filter((i) => i.name !== 'sid').map((param) => (
             <div key={param.name}>
               <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
                 {param.label} <span className="text-rose-400">*</span>
@@ -125,7 +128,7 @@ export const RequestModal: React.FC<Props> = ({ automation, onClose, onSuccess }
                 required
                 value={params[param.name] ?? param.default ?? ''}
                 onChange={(e) => handleParamChange(param.name, e.target.value)}
-                placeholder={param.description || `Enter ${param.label}`}
+                placeholder={param.description || param.placeholder || `Enter ${param.label}`}
                 className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
               />
               {param.description && (
@@ -134,7 +137,7 @@ export const RequestModal: React.FC<Props> = ({ automation, onClose, onSuccess }
             </div>
           ))}
 
-          {automation.inputs.optional.map((param) => (
+          {optionalInputs.map((param) => (
             <div key={param.name}>
               <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">
                 {param.label} <span className="text-slate-600">(Optional)</span>
@@ -154,7 +157,7 @@ export const RequestModal: React.FC<Props> = ({ automation, onClose, onSuccess }
                   type="text"
                   value={params[param.name] ?? param.default ?? ''}
                   onChange={(e) => handleParamChange(param.name, e.target.value)}
-                  placeholder={param.description}
+                  placeholder={param.description || param.placeholder}
                   className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 />
               )}

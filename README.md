@@ -2,8 +2,10 @@
 
 A lightweight, configuration-driven self-service portal for triggering SAP and Oracle infrastructure automations via existing GitHub Actions workflows.
 
-> 📖 **Helpful Documentation Links:**  
-> - 🚀 **[HOW_TO_RUN.md](HOW_TO_RUN.md)**: Easy 3-minute guide to run the portal on any machine.
+> 📖 **Documentation & Deployment Guides:**  
+> - 🚀 **[HOW_TO_RUN.md](HOW_TO_RUN.md)**: Easy 3-minute quickstart guide for local testing and demonstration.
+> - 🏢 **[CLIENT_DEPLOYMENT_GUIDE.md](CLIENT_DEPLOYMENT_GUIDE.md)**: Production deployment guide (Linux systemd, Nginx reverse proxy, backups, security).
+> - 🛡️ **[PRE_DEPLOYMENT_AUDIT.md](PRE_DEPLOYMENT_AUDIT.md)**: Comprehensive pre-deployment security, code audit, and test report.
 > - 📂 **[FILES_AND_FLOW.md](FILES_AND_FLOW.md)**: Complete file-by-file explainer, trigger chains, and end-to-end data flow.
 > - 🏗️ **[architecture.html](architecture.html)**: Interactive visual system blueprint and UI flow simulator.
 

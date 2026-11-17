@@ -152,7 +152,10 @@ async def test_approver_can_approve_and_trigger_workflow(client):
     matching = [e for e in execs.json() if e["request_id"] == req_id]
     assert len(matching) == 1
     assert matching[0]["workflow_file"] == "sap_start_linux.yml"
+    assert matching[0]["github_workflow"] == "sap_start_linux.yml"
     assert matching[0]["sid"] == "S4H"
+    assert matching[0]["triggered_by"] == "approver_user"
+    assert matching[0]["triggered_at"] is not None
 
 
 @pytest.mark.anyio

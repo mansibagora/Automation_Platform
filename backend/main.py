@@ -375,7 +375,11 @@ def list_executions(
             automation_name=r["automation_name"],
             sid=r["sid"],
             requested_by=r["requested_by"],
-            reviewed_by=r["reviewed_by"]
+            reviewed_by=r["reviewed_by"],
+            github_workflow=r["workflow_file"],
+            triggered_by=r["reviewed_by"] or r["requested_by"] or "system",
+            triggered_at=r["dispatched_at"],
+            execution_logs=r["log_summary"]
         ))
     return results
 

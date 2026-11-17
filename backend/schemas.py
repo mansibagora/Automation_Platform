@@ -108,6 +108,11 @@ class ExecutionOut(BaseModel):
     sid: Optional[str] = None
     requested_by: Optional[str] = None
     reviewed_by: Optional[str] = None
+    # Aliases for flexible frontend client compatibility
+    github_workflow: Optional[str] = None
+    triggered_by: Optional[str] = None
+    triggered_at: Optional[str] = None
+    execution_logs: Optional[str] = None
 
 
 class DashboardSummary(BaseModel):

@@ -2,10 +2,12 @@ export interface InputParameter {
   name: string;
   label: string;
   type: string;
-  required: boolean;
+  required?: boolean;
+  placeholder?: string;
   default?: any;
   description?: string;
   allowed_values?: string[];
+  regex?: string;
 }
 
 export interface AutomationItem {
@@ -17,11 +19,16 @@ export interface AutomationItem {
   description: string;
   workflow_file: string;
   git_ref: string;
-  inputs: {
+  enabled: boolean;
+  requires_configuration?: boolean;
+  required_inputs?: InputParameter[];
+  optional_inputs?: InputParameter[];
+  github_input_mapping?: Record<string, string>;
+  // For backwards compatibility
+  inputs?: {
     required: InputParameter[];
     optional: InputParameter[];
   };
-  enabled: boolean;
 }
 
 export interface AutomationRequest {
@@ -33,7 +40,7 @@ export interface AutomationRequest {
   action: string;
   sid: string;
   parameters: Record<string, any>;
-  status: 'PENDING_APPROVAL' | 'APPROVED' | 'REJECTED';
+  status: 'PENDING_APPROVAL' | 'APPROVED' | 'REJECTED' | 'RUNNING' | 'COMPLETED' | 'FAILED';
   requested_by: string;
   requested_at: string;
   reviewed_by?: string;
@@ -46,18 +53,24 @@ export interface Execution {
   id: string;
   request_id: string;
   automation_id: string;
-  automation_name: string;
-  sid: string;
-  action: string;
-  github_workflow: string;
+  workflow_file?: string;
+  github_workflow?: string;
+  automation_name?: string;
+  sid?: string;
+  action?: string;
+  git_ref?: string;
   github_run_id?: string;
   github_run_url?: string;
   status: 'QUEUED' | 'RUNNING' | 'COMPLETED' | 'FAILED';
-  triggered_by: string;
-  triggered_at: string;
+  dispatched_at?: string;
+  triggered_at?: string;
   completed_at?: string;
-  error_message?: string;
+  log_summary?: string;
   execution_logs?: string;
+  requested_by?: string;
+  reviewed_by?: string;
+  triggered_by?: string;
+  error_message?: string;
 }
 
 export interface DashboardSummary {
@@ -71,5 +84,5 @@ export interface DashboardSummary {
 export interface User {
   username: string;
   name: string;
-  role: 'engineer' | 'approver' | 'admin';
+  role: 'engineer' | 'approver' | 'admin' | 'requester';
 }

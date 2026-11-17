@@ -37,6 +37,25 @@ export const Executions: React.FC = () => {
     }
   };
 
+  const getWorkflowName = (exec: Execution) =>
+    exec.workflow_file || exec.github_workflow || 'workflow.yml';
+
+  const getTriggeredBy = (exec: Execution) =>
+    exec.reviewed_by || exec.requested_by || exec.triggered_by || 'operator';
+
+  const getFormattedDate = (exec: Execution) => {
+    const rawDate = exec.dispatched_at || exec.triggered_at;
+    if (!rawDate) return '-';
+    try {
+      return new Date(rawDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } catch {
+      return String(rawDate);
+    }
+  };
+
+  const getExecutionLogs = (exec: Execution) =>
+    exec.log_summary || exec.execution_logs || 'No logs generated yet.';
+
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       {/* Header */}
@@ -96,11 +115,11 @@ export const Executions: React.FC = () => {
                       #{exec.id.slice(0, 8)}
                     </td>
                     <td className="py-3.5 px-4 font-medium text-white">
-                      <div>{exec.automation_name}</div>
-                      <div className="text-[10px] text-slate-500 font-mono">{exec.github_workflow}</div>
+                      <div>{exec.automation_name || 'Automation'}</div>
+                      <div className="text-[10px] text-slate-500 font-mono">{getWorkflowName(exec)}</div>
                     </td>
                     <td className="py-3.5 px-4 font-mono font-bold text-slate-200">
-                      {exec.sid}
+                      {exec.sid || '-'}
                     </td>
                     <td className="py-3.5 px-4">
                       <StatusChip status={exec.status} />
@@ -123,10 +142,10 @@ export const Executions: React.FC = () => {
                       )}
                     </td>
                     <td className="py-3.5 px-4 text-slate-400">
-                      {exec.triggered_by}
+                      {getTriggeredBy(exec)}
                     </td>
                     <td className="py-3.5 px-4 text-slate-500">
-                      {new Date(exec.triggered_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      {getFormattedDate(exec)}
                     </td>
                     <td className="py-3.5 px-4 text-right">
                       <div className="flex items-center justify-end gap-2">
@@ -167,7 +186,7 @@ export const Executions: React.FC = () => {
                   Execution Logs: #{selectedExec.id.slice(0, 8)}
                 </h3>
                 <p className="text-xs text-slate-400 font-mono mt-0.5">
-                  Workflow: {selectedExec.github_workflow} • SID: {selectedExec.sid}
+                  Workflow: {getWorkflowName(selectedExec)} • SID: {selectedExec.sid || '-'}
                 </p>
               </div>
               <button
@@ -179,7 +198,7 @@ export const Executions: React.FC = () => {
             </div>
 
             <div className="flex-1 overflow-auto bg-slate-950 rounded-lg p-4 font-mono text-xs text-slate-300 my-4 border border-slate-800/80 whitespace-pre-wrap">
-              {selectedExec.execution_logs || 'No logs generated yet.'}
+              {getExecutionLogs(selectedExec)}
             </div>
 
             <div className="flex justify-between items-center pt-2">
