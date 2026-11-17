@@ -4,6 +4,7 @@ A lightweight, configuration-driven self-service portal for triggering SAP and O
 
 > 📖 **Documentation & Deployment Guides:**  
 > - 🚀 **[HOW_TO_RUN.md](HOW_TO_RUN.md)**: Easy 3-minute quickstart guide for local testing and demonstration.
+> - 📋 **[CLIENT_ENVIRONMENT_CHECKLIST.md](CLIENT_ENVIRONMENT_CHECKLIST.md)**: What to check & update for client environment (GitHub link, token, ports, CORS).
 > - 🏢 **[CLIENT_DEPLOYMENT_GUIDE.md](CLIENT_DEPLOYMENT_GUIDE.md)**: Production deployment guide (Linux systemd, Nginx reverse proxy, backups, security).
 > - 🛡️ **[PRE_DEPLOYMENT_AUDIT.md](PRE_DEPLOYMENT_AUDIT.md)**: Comprehensive pre-deployment security, code audit, and test report.
 > - 📂 **[FILES_AND_FLOW.md](FILES_AND_FLOW.md)**: Complete file-by-file explainer, trigger chains, and end-to-end data flow.
