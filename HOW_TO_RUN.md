@@ -1,153 +1,141 @@
-# Step-by-Step Guide: Running the Infrastructure Automation Portal in Customer Environment
+# How to Run the Infrastructure Automation Portal (Easy 3-Minute Guide)
 
-This guide explains how to deploy and run the **standalone lightweight portal** on any customer machine from scratch.
-
-> **Zero Complex Infrastructure Required:**  
-> - ❌ No Docker or Kubernetes  
-> - ❌ No PostgreSQL database setup  
-> - ❌ No RabbitMQ message queues  
-> - ❌ No AI agents or code generation  
-> 
-> The portal runs directly on the local operating system using a lightweight Python backend (with embedded SQLite) and a clean React frontend.
+This guide shows you how to run the portal on any machine (macOS, Linux, or Windows).
 
 ---
 
-## 1. Prerequisites on the Customer Machine
+## ⚡ Quick 30-Second Overview
 
-Ensure the target machine has the following installed:
-1. **Git**
-2. **Python 3.10+** (with `pip`)
-3. **Node.js 18+** (with `npm`)
+The portal has two simple parts:
+1. **Backend (Python FastAPI)**: Runs on port `8000`. Handles requests, approvals, and GitHub dispatch. Stores data in a single local file (`portal.db`).
+2. **Frontend (React Vite)**: Runs on port `5173`. Beautiful user interface with Dashboard, Catalogue, Approvals, and Executions.
 
-Verify your installations:
+**No Docker, No Kubernetes, No external database setup required.**
+
+---
+
+## 📋 What You Need Installed
+- **Git**
+- **Python 3.10+**
+- **Node.js 18+**
+
+Check with:
 ```bash
 git --version
 python3 --version
 node -v
-npm -v
 ```
 
 ---
 
-## 2. Step 1: Clone the Repository & Checkout Branch
+## 🚀 Step-by-Step Instructions
 
-Open your terminal on the customer machine:
+### Step 1: Open Terminal 1 & Start the Backend
 
-```bash
-# Clone the repository
-git clone https://github.com/mansibagora/Automation_Platform.git
-cd Automation_Platform
-
-# Switch to the standalone lightweight branch
-git checkout standalone-lightweight-portal
-```
-
----
-
-## 3. Step 2: Setup & Start Backend (Terminal 1)
-
-In your first terminal:
-
-```bash
-# Navigate to the backend directory
-cd backend
-
-# Create a clean Python virtual environment
-python3 -m venv .venv
-
-# Activate the virtual environment
-# On Linux / macOS:
-source .venv/bin/activate
-# On Windows (cmd/powershell):
-# .venv\Scripts\activate
-
-# Install the minimal Python dependencies
-pip install -r requirements.txt
-
-# Start the FastAPI backend server
-uvicorn main:app --host 0.0.0.0 --port 8000
-```
-
-### What happens automatically:
-- The backend starts serving on `http://localhost:8000`.
-- The SQLite database (`portal.db`) is automatically initialized if it doesn't already exist.
-- Predefined SAP & Oracle automations are loaded from `automations.json`.
-- Interactive API documentation becomes available at `http://localhost:8000/docs`.
-
----
-
-## 4. Step 3: Setup & Start Frontend (Terminal 2)
-
-Open a **second, separate terminal window** on the same machine:
-
-```bash
-# Navigate to the frontend directory
-cd Automation_Platform/frontend
-
-# Install node dependencies
-npm install
-
-# Start the development server
-npm run dev
-```
-
-The terminal will confirm:
-```
-  VITE v8.3.8  ready in 180 ms
-
-  ➜  Local:   http://localhost:5173/
-```
-
----
-
-## 5. Step 4: Open in Web Browser
-
-Open any modern browser (Chrome, Edge, Firefox, Safari) and navigate to:
-👉 **`http://localhost:5173`**
-
----
-
-## 6. Step 5: How to Use the Portal (Demonstration Walkthrough)
-
-### 1. Submit a Request (as Engineer / Requester)
-- Click **"Catalogue"** in the left sidebar.
-- Choose any automation (e.g. **HANA Start** on Linux or **Oracle Stop** on Windows).
-- Click **"Configure & Request"**.
-- Enter your mandatory **SID** (e.g., `HDB`) and required instance number.
-- Click **"Submit Request"**.
-- Your request is now in `PENDING_APPROVAL` status.
-
-### 2. Approve the Request (as Designated Approver)
-- Click **"Approvals"** in the left sidebar.
-- Look at the sidebar or the banner: switch your role to **"Designated Approver (approver_user)"**.
-- Click the green **"Approve"** button next to the pending request.
-- Add an optional review comment and click **"Confirm APPROVE"**.
-- The request transitions to `APPROVED` and immediately dispatches the automation workflow.
-
-### 3. Monitor Execution
-- Click **"Executions"** in the left sidebar.
-- View real-time status (`QUEUED` → `RUNNING` → `COMPLETED`).
-- Click **"Logs"** to inspect run output.
-- Click **"Sync"** to refresh status directly from GitHub.
-
----
-
-## 7. Configuration: Simulated Mode vs. Live GitHub Actions
-
-### Default (Simulated Mode - Out of the Box):
-If you do not set any GitHub tokens, the portal runs in **Realistic Simulation Mode**. You can immediately demonstrate the entire end-to-end lifecycle (requesting, approving, execution logs, and audit trails) with zero external setup or credentials.
-
-### Live GitHub Actions Mode (Connecting to Real Repository):
-To trigger actual GitHub Actions workflows running your Ansible playbooks:
-1. Open `backend/.env` in a text editor:
-   ```env
-   PORTAL_PORT=8000
-   PORTAL_DB_PATH=portal.db
-   GITHUB_TOKEN=ghp_yourPersonalAccessTokenHere
-   GITHUB_REPO=your-github-org-or-username/your-ansible-repo
-   PORTAL_SECRET_KEY=portal-dev-secret-key-change-in-production
-   DESIGNATED_APPROVER=approver_user
-   CORS_ORIGINS=http://localhost:5173,http://localhost:5174,http://localhost:3000
+1. Go to the project root and ensure you are on the `standalone-lightweight-portal` branch:
+   ```bash
+   git checkout standalone-lightweight-portal
    ```
-2. Restart the backend terminal (`CTRL+C`, then re-run `uvicorn main:app --host 0.0.0.0 --port 8000`).
-3. Approvals will now trigger real `workflow_dispatch` events in your GitHub Actions pipeline!
+
+2. Go into `backend` and create your Python environment:
+   ```bash
+   cd backend
+   python3 -m venv .venv
+   ```
+
+3. Activate your virtual environment:
+   - **macOS / Linux:**
+     ```bash
+     source .venv/bin/activate
+     ```
+   - **Windows:**
+     ```powershell
+     .venv\Scripts\activate
+     ```
+
+4. Install the 5 required Python packages:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+5. Start the backend:
+   ```bash
+   uvicorn main:app --host 0.0.0.0 --port 8000
+   ```
+
+✅ **Done!** You will see:
+`Uvicorn running on http://0.0.0.0:8000`
+
+---
+
+### Step 2: Open Terminal 2 & Start the Frontend
+
+Open a **new terminal window** in the same project:
+
+1. Go into the `frontend` directory:
+   ```bash
+   cd frontend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the frontend:
+   ```bash
+   npm run dev
+   ```
+
+✅ **Done!** You will see:
+`➜ Local: http://localhost:5173/`
+
+---
+
+### Step 3: Open in Your Browser
+
+Open your browser and visit:
+👉 **[http://localhost:5173](http://localhost:5173)**
+
+API Documentation (Swagger) is available at:
+👉 **[http://localhost:8000/docs](http://localhost:8000/docs)**
+
+---
+
+## 🎯 Quick 3-Step Test Run in the UI
+
+1. **Submit a Request (as Engineer):**
+   - Click **"Catalogue"** in the left menu.
+   - Choose **HANA Start** (or any SAP/Oracle automation) and click **"Configure & Request"**.
+   - Type `HDB` as the System ID (SID) and instance number `00`.
+   - Click **"Submit Request"**.
+
+2. **Approve the Request (as Approver):**
+   - Click **"Approvals"** in the left menu.
+   - Click the green **"Switch to Approver Role"** button (or change the dropdown in the sidebar to `approver_user`).
+   - Click **"Approve"** on your pending request, then click **"Confirm APPROVE"**.
+
+3. **Watch the Execution:**
+   - Click **"Executions"** in the left menu.
+   - You will see the execution start (`RUNNING`), generate logs, and complete (`COMPLETED`).
+   - Click **"Logs"** to inspect run output.
+
+---
+
+## ⚙️ Configuration: Demo Mode vs. Real GitHub
+
+- **Default (Demo / Simulation Mode):**  
+  Works out-of-the-box with **zero configuration**. You can test requests, approvals, and simulated executions immediately.
+
+- **To Connect to Real GitHub Actions Workflows:**  
+  Open `backend/.env` and enter your GitHub details:
+  ```env
+  GITHUB_TOKEN=ghp_yourPersonalAccessTokenHere
+  GITHUB_REPO=your-username/your-ansible-repo
+  ```
+  Restart the backend terminal (`CTRL+C`, then `uvicorn main:app --host 0.0.0.0 --port 8000`). Now, approving a request triggers a real GitHub Actions workflow!
+
+---
+
+## 📖 Need to Know How Every File Works?
+Check out **[FILES_AND_FLOW.md](FILES_AND_FLOW.md)** for a file-by-file explanation of what triggers what.
